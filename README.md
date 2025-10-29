@@ -15,7 +15,7 @@ firmware H0.1.7 >= v0.1.35
          H0.1.9 >= v0.1.35
 ```
 * [Boost](http://www.boost.org) (version 1.5.4 or higher)
-* [CMake](http://www.cmake.org) (version 2.8.3 or higher)
+* [CMake](http://www.cmake.org) (version 3.10 or higher)
 * [g++](https://gcc.gnu.org/) (version 8.3.0 or higher)
 
 
@@ -42,6 +42,35 @@ If can not find msgpack.hpp, then
 ```bash
 sudo apt install libmsgpack*
 ```
+
+### Install
+The SDK can be installed system-wide so downstream projects can locate it with `find_package`.
+
+```bash
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake --build .
+sudo cmake --install . --prefix /usr/local
+```
+
+To select the prebuilt library architecture explicitly (defaults to autodetect), pass:
+
+```bash
+cmake -DUNITREE_SDK_ARCH=amd64 ..
+```
+
+Disable the example binaries with `-DBUILD_EXAMPLES=OFF` if you only need the library.
+
+### Use In External Projects
+After installation, CMake-based applications can consume the SDK with:
+
+```cmake
+find_package(unitree_legged_sdk REQUIRED)
+target_link_libraries(my_app PRIVATE unitree_legged_sdk::unitree_legged_sdk)
+```
+
+> Note: The vendor-provided static library is not built with position-independent code. The exported CMake target injects `-no-pie` automatically on Linux/GNU/Clang toolchains to avoid linker errors.
 
 ### Run
 
