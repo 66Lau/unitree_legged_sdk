@@ -68,9 +68,12 @@ After installation, CMake-based applications can consume the SDK with:
 ```cmake
 find_package(unitree_legged_sdk REQUIRED)
 target_link_libraries(my_app PRIVATE unitree_legged_sdk::unitree_legged_sdk)
+unitree_legged_sdk_disable_pie(my_app) # Linux + GCC/Clang: disable PIE for vendor static lib
 ```
 
-> Note: The vendor-provided static library is not built with position-independent code. The exported CMake target injects `-no-pie` automatically on Linux/GNU/Clang toolchains to avoid linker errors.
+> The vendor-provided static library is not built with position-independent code. On Linux with GCC or Clang,
+> call `unitree_legged_sdk_disable_pie(<executable-target>)` after linking so the resulting binary is built
+> without PIE (`-fno-pie/-no-pie`). Shared libraries should omit this call.
 
 ### Run
 

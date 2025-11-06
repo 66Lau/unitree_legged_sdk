@@ -3,6 +3,7 @@ project(unitree_legged_sdk VERSION 0.0.0 LANGUAGES C CXX)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
+include(cmake/unitree_legged_sdkHelpers.cmake)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -42,8 +43,7 @@ target_link_libraries(unitree_legged_sdk
   INTERFACE
     Threads::Threads
     $<BUILD_INTERFACE:${_unitree_sdk_lib}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_LIBDIR}/libunitree_legged_sdk.a>
-    $<$<AND:$<PLATFORM_ID:Linux>,$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>>:-no-pie>
+    $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_LIBDIR}/libunitree_legged_sdk.a>
 )
 
 option(PYTHON_BUILD "Build python wrapper" OFF)
@@ -58,18 +58,23 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 if(BUILD_EXAMPLES)
   add_executable(example_position example/example_position.cpp)
   target_link_libraries(example_position PRIVATE unitree_legged_sdk::unitree_legged_sdk)
+  unitree_legged_sdk_disable_pie(example_position)
 
   add_executable(example_velocity example/example_velocity.cpp)
   target_link_libraries(example_velocity PRIVATE unitree_legged_sdk::unitree_legged_sdk)
+  unitree_legged_sdk_disable_pie(example_velocity)
 
   add_executable(example_torque example/example_torque.cpp)
   target_link_libraries(example_torque PRIVATE unitree_legged_sdk::unitree_legged_sdk)
+  unitree_legged_sdk_disable_pie(example_torque)
 
   add_executable(example_walk example/example_walk.cpp)
   target_link_libraries(example_walk PRIVATE unitree_legged_sdk::unitree_legged_sdk)
+  unitree_legged_sdk_disable_pie(example_walk)
 
   add_executable(example_joystick example/example_joystick.cpp)
   target_link_libraries(example_joystick PRIVATE unitree_legged_sdk::unitree_legged_sdk)
+  unitree_legged_sdk_disable_pie(example_joystick)
 endif()
 
 find_package(catkin QUIET)
@@ -121,5 +126,6 @@ write_basic_package_version_file(
 install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/unitree_legged_sdkConfig.cmake"
   "${CMAKE_CURRENT_BINARY_DIR}/unitree_legged_sdkConfigVersion.cmake"
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/unitree_legged_sdkHelpers.cmake"
   DESTINATION ${_unitree_config_install_dir}
 )

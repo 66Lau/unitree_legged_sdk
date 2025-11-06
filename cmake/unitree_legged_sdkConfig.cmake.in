@@ -1,5 +1,6 @@
 @PACKAGE_INIT@
 
 include("${CMAKE_CURRENT_LIST_DIR}/unitree_legged_sdkTargets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/unitree_legged_sdkHelpers.cmake")
 
 check_required_components(unitree_legged_sdk)
